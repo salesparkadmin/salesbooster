@@ -1,4 +1,4 @@
-// SaleSpark 2020 - Version 1.0
+// SaleSpark 2020 - Version 1.1
 function scriptInjection(src, callback) {
 
     var script = document.createElement('script');
