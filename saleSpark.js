@@ -39,7 +39,7 @@ function removeGDPR() {
 function globalJavascript() {
 
     const webApi = "https://"+Shopify.shop+"/apps/storefront/api/storefront/";
-    const scriptBase = "https://"+Shopify.shop+'/apps/storefront/js/storefrontjs/';
+    const scriptBase = "https://cdn.jsdelivr.net/gh/salespark/salesbooster@1.1/';
     var sweetAlertIncluded = false;
     var store = {};
     this.init = function (callback, callbackArgs) {
@@ -73,30 +73,30 @@ function globalJavascript() {
                         localStorage.setItem('sp_globalSettings',globalJavascript.globalSettingsAndData);
                         // if(globalJavascript.globalSettingsAndData.emailCollector != null) {
                         if(!globalJavascript.sweetAlertIncluded) {
-                            cssFileInjection(scriptBase+"saleSpark-sweetalert2.css");
-                            scriptInjection(scriptBase+"saleSpark-sweetalert2.all.js");
+                            cssFileInjection(scriptBase+"saleSpark-sweetalert2.min.css");
+                            scriptInjection(scriptBase+"saleSpark-sweetalert2.all.min.js");
                             globalJavascript.sweetAlertIncluded = true;
                         }
                         //}
                         if(globalJavascript.globalSettingsAndData.exitpopup != null) {
                             if(globalJavascript.globalSettingsAndData.exitpopup.popup_is_active == '1') {
                                 if(!globalJavascript.sweetAlertIncluded) {
-                                    cssFileInjection(scriptBase+"saleSpark-sweetalert2.css");
-                                    scriptInjection(scriptBase+"saleSpark-sweetalert2.all.js");
+                                    cssFileInjection(scriptBase+"saleSpark-sweetalert2.min.css");
+                                    scriptInjection(scriptBase+"saleSpark-sweetalert2.all.min.js");
                                     globalJavascript.sweetAlertIncluded = true;
                                 }
-                                scriptInjection(scriptBase+"active-timeout.js");
-                                scriptInjection(scriptBase+"donleeve.js");
+                                scriptInjection(scriptBase+"active-timeout.min.js");
+                                scriptInjection(scriptBase+"donleeve.min.js");
                             }
                             if(globalJavascript.globalSettingsAndData.exitpopup.popup_is_active == '1' || globalJavascript.globalSettingsAndData.exitpopup.notif_is_active == '1') {
-                                scriptInjection(scriptBase+"saleSparkexitSale.js");
+                                scriptInjection(scriptBase+"saleSparkexitSale.min.js");
                             }
                         }
                         if(globalJavascript.globalSettingsAndData.carteminder != null) {
                             scriptInjection("https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js", function () {
                                 scriptInjection("https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js", function () {
                                     scriptInjection(globalJavascript.scriptBase+"pushnotif/bin/push.min.js", function () {
-                                        scriptInjection(scriptBase+"cartreminder.js");
+                                        scriptInjection(scriptBase+"cartreminder.min.js");
                                     });
                                 });
                             });
@@ -115,7 +115,7 @@ function globalJavascript() {
                             scriptInjection("https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js", function () {
                                 scriptInjection("https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js", function () {
                                     scriptInjection(globalJavascript.scriptBase+"pushnotif/bin/push.min.js", function () {
-                                        scriptInjection(scriptBase+"cartreminder.js");
+                                        scriptInjection(scriptBase+"cartreminder.min.js");
                                     });
                                 });
                             });
@@ -132,7 +132,7 @@ function globalJavascript() {
             scriptInjection("https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js", function () {
                 scriptInjection(globalJavascript.scriptBase+"pushnotif/bin/push.min.js", function () {
 
-                    scriptInjection(scriptBase+"saleSpark-cartTrigger.js");
+                    scriptInjection(scriptBase+"saleSpark-cartTrigger.min.js");
                 });
             });
         });
