@@ -74,7 +74,6 @@ function globalJavascript() {
                 success: function (response) {
                     if (response._metadata.message == 'success') {
                         globalJavascript.globalSettingsAndData = response.records;
-                        // console.log(globalJavascript.globalSettingsAndData);
                         localStorage.setItem('sp_globalSettings', globalJavascript.globalSettingsAndData);
                         // if(globalJavascript.globalSettingsAndData.emailCollector != null) {
                         if (!globalJavascript.sweetAlertIncluded) {

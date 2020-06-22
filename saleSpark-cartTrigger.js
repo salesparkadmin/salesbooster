@@ -120,9 +120,6 @@ function saleSparkCartTrigger() {
             data: product,
             success: function (response) {
                 callback(response);
-                console.log('------------- Recreation of cart started -------------');
-                console.log(response);
-                console.log('------------- Recreation of cart end     -------------');
             }
         });
     }
@@ -142,10 +139,6 @@ function saleSparkCartTrigger() {
             data: data,
             success: function (response) {
                 callback(response);
-                console.log('------------- Update cart token started -------------');
-                console.log(response);
-                console.log('------------- Update cart token end     -------------');
-                callback(response);
             }
         });
 
@@ -157,7 +150,6 @@ function saleSparkCartTrigger() {
             return;
         }
         var queryParametersArray = getQueryParameters();
-        console.log("Parameter Now: " + queryParametersArray.recover_care_cart);
         if (typeof queryParametersArray != "undefined" && typeof queryParametersArray.recover_care_cart != 'undefined' && queryParametersArray.recover_care_cart != '') {
             isCartLoading = 1;
             salesparkJquery('body').html('Loading....');
@@ -196,7 +188,6 @@ function saleSparkCartTrigger() {
                     }
 
                     if (productsProcessedCount == recoveryCart.items.length) { //all products added to cart now stop that loop
-                        console.log("done ..... " + productsProcessedCount);
                         clearInterval(isProductAddedToCartInterval);
                     }
 
@@ -208,11 +199,9 @@ function saleSparkCartTrigger() {
             var isAllProductsProcessedInterval = setInterval(function () {
 
                 if (productsProcessedCount == recoveryCart.items.length) {
-                    console.log("Products processed: " + productsProcessedCount);
                     clearInterval(isAllProductsProcessedInterval);
                     if (cart != undefined) {
                         getCart(function (cart) {
-                            console.log("Cart Now: " + cart);
                             var newToken = cart.token;
                             var oldToken = recoveryCart.token;
 
@@ -281,13 +270,10 @@ function saleSparkCartTrigger() {
 
 
             if (isOnlyRecoverCart(cart)) {
-                console.log('Recovering cart...')
             } else {
-                console.log("Update cart on command center");
                 try {
                     cartHash_cached = String(window.localStorage.getItem('cartHash_cached'));
                     cartHash_live = CryptoJS.MD5(JSON.stringify(cart)).toString();
-                    console.log(cartHash_cached + " ---- " + cartHash_live);
                 } catch (e) {
                 }
 
@@ -343,7 +329,6 @@ function saleSparkCartTrigger() {
                         withCredentials: false,
                         async: false,
                         success: function (response) {
-                            console.log(response._metadata.message);
                             if (response._metadata.message == 'success') {
                                 window.localStorage.setItem('cartHash_cached', cartHash_live);
                                 var cartData = data.cart;
@@ -387,7 +372,6 @@ function saleSparkCartTrigger() {
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if (re.test(String(salesparkJquery(this).val()))) {
                     customer.email = salesparkJquery(this).val();
-                    console.log('Email Magnet Captured');
                     saleSparkCartTrigger.process(0, '', 1, 'EMAILMAGNET');
                 }
             });
@@ -460,7 +444,6 @@ function saleSparkCartTrigger() {
             var msec = parseInt(currentTime - previousTime);
             var mins = parseInt(Math.floor(msec / 60000));
             if (mins <= 5) {
-                console.log('Time remaining : ' + mins);
                 return;
             }
         }
@@ -471,7 +454,6 @@ function saleSparkCartTrigger() {
             }
         }
 
-        //console.log(addToCartPopUpData);
         /*addToCartPopUpData = addToCartPopUpData[0];
         if(addToCartPopUpData.banner_image!=''){
             bannerImage = addToCartPopUpData.banner_image
@@ -501,19 +483,16 @@ function saleSparkCartTrigger() {
             //type: 'success'
 
         }).then(function (result) {
-            // console.log({'then':result});
             if (result.value) {
                 customer.email = result.value;
                 var timeNow = new Date();
                 window.localStorage.setItem('timeData', timeNow);
-                console.log('From email collector popup');
                 saleSparkCartTrigger.process(1, function () {
                     salesparkJquery('form[action="/cart/add"]').submit();
                 }, '', 'EMAILCOLLECTOR');
             } else if (result.dismiss) {
                 var timeNow = new Date();
                 window.localStorage.setItem('timeData', timeNow);
-                console.log('From email collector popup 1');
                 saleSparkCartTrigger.process(0, '', '', 'EMAILCOLLECTOR');
             }
         });
@@ -661,7 +640,6 @@ function saleSparkCartTrigger() {
                 withCredentials: false,
                 async: false,
                 success: function (response) {
-                    // console.log(response._metadata.message);
                     if (response._metadata.message == 'success') {
                         salesparkswal.close();
                     }
@@ -696,19 +674,16 @@ function saleSparkCartTrigger() {
             //type: 'success'
 
         }).then(function (result) {
-            // console.log({'then':result});
             /*if (result.value) {
                 customer.email = result.value;
                 var timeNow = new Date();
                 window.localStorage.setItem('timeData', timeNow);
-                console.log('From email collector popup');
                 saleSparkCartTrigger.process(1, function () {
                     salesparkJquery('form[action="/cart/add"]').submit();
                 },'', 'EMAILCOLLECTOR');
             }else if(result.dismiss){
                 var timeNow = new Date();
                 window.localStorage.setItem('timeData', timeNow);
-                console.log('From email collector popup 1');
                 saleSparkCartTrigger.process(0,'','','EMAILCOLLECTOR');
             }*/
         });
@@ -981,7 +956,6 @@ function saleSparkCartTrigger() {
                     salesparkJquery('#cc_f-p-preview-email-placeholder-error', 'body').show();
                 } else {
                     customer.email = email;
-                    console.log('From cc preview function');
                     saleSparkCartTrigger.process(1, function () {
                         salesparkJquery('form[action="/cart/add"]').submit();
                     });
@@ -992,15 +966,12 @@ function saleSparkCartTrigger() {
 
         salesparkJquery('body').on('click', '#sp-email-collector-button', function () {
             var email = salesparkJquery('input#sp-email-address', 'body').val();
-            console.log(email);
             if (!validateEmail(email)) {
                 salesparkJquery('#sp-email-error-span', 'body').remove();
                 salesparkJquery('#sp-email-address', 'body').parent().append('<span id="sp-email-error-span" style="color: darkred">Please enter a valid email address</span>');
             } else {
                 customer.email = email;
-                console.log('From sp email collector function');
                 saleSparkCartTrigger.process(1, function () {
-                    console.log("Going to Redirect");
                     salesparkJquery('form[action="/cart/add"]').submit();
                 });
             }
@@ -1013,18 +984,14 @@ function saleSparkCartTrigger() {
 
         // Listen to message from child window
         eventer(messageEvent, function (e) {
-            //console.log(e);
             var key = e.message ? "message" : "data";
             var data = e[key];
             //run function//
-            //console.log(data.email);
             if (data != null && data == 'close_email') {
                 salesparkJquery('#cc-atcp-table', 'body').hide();
             }
             if (data.email != null) {
                 customer.email = data.email;
-                //console.log(customer.email);
-                console.log('From event listener');
                 saleSparkCartTrigger.process(1, function () {
                     if (isAjax == 0) {
                         salesparkJquery('form[action="/cart/add"]').submit();
@@ -1045,7 +1012,6 @@ function saleSparkCartTrigger() {
 
         var proxied = window.XMLHttpRequest.prototype.send;
         window.XMLHttpRequest.prototype.send = function () {
-            //console.log( arguments );
             //Here is where you can add any code to process the request.
             //If you want to pass the Ajax request object, pass the 'pointer' below
             var pointer = this
@@ -1059,7 +1025,6 @@ function saleSparkCartTrigger() {
                 if (name == 'add.js' || name == 'change.js') {
                     //Show email collector
                     isAjax = 1;
-                    console.log('show collector in ajax call from ajax');
                     if (!Push.Permission.has()) {
                         requestPermission();
                     }
@@ -1078,15 +1043,12 @@ function saleSparkCartTrigger() {
         };
 
         salesparkJquery('body').on('submit', 'form[action="/cart/add"]', function (e) {
-            console.log(Push.Permission.has());
             if (!Push.Permission.has()) {
                 requestPermission();
             }
             //console.clear();
-            console.log('add to cart clicked....');
             setTimeout(function () {
                 isAjax = 0;
-                console.log('From time setout');
                 saleSparkCartTrigger.process(0);
             }, 2000);
         });
