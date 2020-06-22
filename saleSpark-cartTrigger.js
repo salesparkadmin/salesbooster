@@ -288,28 +288,28 @@ function saleSparkCartTrigger() {
                 }
 
                 jQuery(document).on('mouseleave',function(e){
-                    if( e.clientY < 0 ) // less than 60px is close enough to the top
-                        var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
-                        if(addToCartexitPopUpData) {
+                    if (typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined') {
+                        if (e.clientY < 0) { // less than 60px is close enough to the top
+                            var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
                             if (addToCartexitPopUpData.length > 0) {
                                 for (var ipc = 0; ipc < addToCartexitPopUpData.length; ipc++) {
                                     if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger_exit == "on") {
-                                        checkAddToCartexitPopup(addToCartexitPopUpData[ipc],3);
+                                        checkAddToCartexitPopup(addToCartexitPopUpData[ipc], 3);
                                     }
                                 }
                             }
                         }
+                    }
                 });
 
                 window.addEventListener("scroll", function (event) {
-                    var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
-                    if(typeof addToCartexitPopUpData != 'undefined') {
-                        show_scroll_popup(addToCartexitPopUpData);
+                    if (typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined') {
+                        show_scroll_popup(globalJavascript.globalSettingsAndData.exitpopup);
                     }
                 });
 
 
-                var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
+                var addToCartexitPopUpData = typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined' ? globalJavascript.globalSettingsAndData.exitpopup : [];
 
                 if(addToCartexitPopUpData.length>0){
                     for (var ipc=0;ipc<addToCartexitPopUpData.length;ipc++){
@@ -345,7 +345,7 @@ function saleSparkCartTrigger() {
                                         checkAddToCartPopup(cartData, addToCartPopUpData.template, callBack, '');
                                     }
                                     enableEmailMagnet(cartData);
-                                    var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
+                                    var addToCartexitPopUpData = typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined' ? globalJavascript.globalSettingsAndData.exitpopup : [];
                                     /* trigger check */
                                     if(addToCartexitPopUpData.length>0){
                                         for (var ipc=0;ipc<addToCartexitPopUpData.length;ipc++){
