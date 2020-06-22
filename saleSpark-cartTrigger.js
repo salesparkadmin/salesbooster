@@ -1,4 +1,5 @@
 // SaleSpark 2020 - Version 1.0
+// Changed on 6-JUNE-2020
 var isAjax = 0;
 var isCartLoading = 0;
 var isCheckForCall = true;
@@ -50,7 +51,7 @@ function saleSparkCartTrigger() {
 
     var customer = {};
     var store = {};
-    var webApi = "https://"+Shopify.shop+"/apps/storefront/api/storefront/";
+    var webApi = "https://"+Shopify.domain+"/apps/storefront/api/storefront/";
     this.init = function (callback, callbackArgs) {
         scriptInjection("https://code.jquery.com/jquery-3.4.1.min.js", function () {
             scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js", function () {
