@@ -40,7 +40,7 @@ function removeGDPR() {
 function globalJavascript() {
 
     const webApi = "https://"+Shopify.domain+"/apps/storefront/api/storefront/";
-    const scriptBase = "https://cdn.jsdelivr.net/gh/salespark/salesbooster@1.1.2/";
+    const scriptBase = "https://cdn.jsdelivr.net/gh/salespark/salesbooster@1.1.4/";
     var sweetAlertIncluded = false;
     var store = {};
     this.init = function (callback, callbackArgs) {
