@@ -51,7 +51,7 @@ function saleSparkCartTrigger() {
 
     var customer = {};
     var store = {};
-    var webApi = "https://"+Shopify.domain+"/apps/storefront/api/storefront/";
+    var webApi = "https://"+window.location.hostname+"/apps/storefront/api/storefront/";
     this.init = function (callback, callbackArgs) {
         scriptInjection("https://code.jquery.com/jquery-3.4.1.min.js", function () {
             scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js", function () {
@@ -255,7 +255,7 @@ function saleSparkCartTrigger() {
 
         getCart(function (cart) {
 
-            window.postMessage("salesparkcartcreated","https://"+Shopify.shop);
+            window.postMessage("salesparkcartcreated","https://"+window.location.hostname);
             if (isCapturedByPopup == 1) {
                 cart.is_email_captured_by_popup = 1;
                 impressionBy = 'EMAILCOLLECTOR';
