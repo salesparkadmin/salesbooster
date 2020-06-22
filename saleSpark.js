@@ -1,4 +1,4 @@
-// SaleSpark 2020 - Version 1.1.3
+// SaleSpark 2020 - Version 1.1.5
 //Changed on 22-June-2020
 function scriptInjection(src, callback) {
 
@@ -40,7 +40,7 @@ function removeGDPR() {
 function globalJavascript() {
 
     const webApi = "https://"+window.location.hostname+"/apps/storefront/api/storefront/";
-    const scriptBase = "https://cdn.jsdelivr.net/gh/salespark/salesbooster@1.1.4/";
+    const scriptBase = "https://cdn.jsdelivr.net/gh/salespark/salesbooster@1.1.5/";
     var sweetAlertIncluded = false;
     var store = {};
     this.init = function (callback, callbackArgs) {
