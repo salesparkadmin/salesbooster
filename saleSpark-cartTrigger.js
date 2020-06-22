@@ -5,6 +5,7 @@ var isCartLoading = 0;
 var isCheckForCall = true;
 var cartHash_cached = 0;
 var cartHash_live = 0;
+
 function getQueryParameters() {
     var prmstr = window.location.search.substr(1);
     return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
@@ -25,7 +26,7 @@ function scriptInjection(src, callback) {
     script.type = "text/javascript";
 
     script.src = src;
-    if (typeof  callback == 'function') {
+    if (typeof callback == 'function') {
         script.addEventListener('load', callback);
     }
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -41,9 +42,9 @@ function cssFileInjection(href) {
 
 function requestPermission() {
     Push.Permission.request(function () {
-        localStorage.setItem('localNotifPermission','yes');
-    },function () {
-        localStorage.setItem('localNotifPermission','no');
+        localStorage.setItem('localNotifPermission', 'yes');
+    }, function () {
+        localStorage.setItem('localNotifPermission', 'no');
     });
 }
 
@@ -51,7 +52,7 @@ function saleSparkCartTrigger() {
 
     var customer = {};
     var store = {};
-    var webApi = "https://"+window.location.hostname+"/apps/storefront/api/storefront/";
+    var webApi = "https://" + window.location.hostname + "/apps/storefront/api/storefront/";
     this.init = function (callback, callbackArgs) {
         scriptInjection("https://code.jquery.com/jquery-3.4.1.min.js", function () {
             scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js", function () {
@@ -152,11 +153,11 @@ function saleSparkCartTrigger() {
 
 
     function isOnlyRecoverCart(cart) {
-        if(isCartLoading == 1) {
+        if (isCartLoading == 1) {
             return;
         }
         var queryParametersArray = getQueryParameters();
-        console.log("Parameter Now: "+queryParametersArray.recover_care_cart);
+        console.log("Parameter Now: " + queryParametersArray.recover_care_cart);
         if (typeof queryParametersArray != "undefined" && typeof queryParametersArray.recover_care_cart != 'undefined' && queryParametersArray.recover_care_cart != '') {
             isCartLoading = 1;
             salesparkJquery('body').html('Loading....');
@@ -211,7 +212,7 @@ function saleSparkCartTrigger() {
                     clearInterval(isAllProductsProcessedInterval);
                     if (cart != undefined) {
                         getCart(function (cart) {
-                            console.log("Cart Now: "+cart);
+                            console.log("Cart Now: " + cart);
                             var newToken = cart.token;
                             var oldToken = recoveryCart.token;
 
@@ -232,30 +233,33 @@ function saleSparkCartTrigger() {
     };
 
 
-    function show_scroll_popup(addToCartexitPopUpData){
-        if(addToCartexitPopUpData.length>0){
-            for (var ipc=0;ipc<addToCartexitPopUpData.length;ipc++){
-                if(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page=="on"){
-                    if(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page_value!=null){
-                        var page_value=parseInt(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page_value);
-                    }else{var page_value=10;}
+    function show_scroll_popup(addToCartexitPopUpData) {
+        if (addToCartexitPopUpData.length > 0) {
+            for (var ipc = 0; ipc < addToCartexitPopUpData.length; ipc++) {
+                if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page == "on") {
+                    if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page_value != null) {
+                        var page_value = parseInt(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_page_value);
+                    } else {
+                        var page_value = 10;
+                    }
                     var s = $(window).scrollTop(),
                         d = $(document).height(),
                         c = $(window).height();
                     var scrollPercent = (s / (d - c)) * 100;
-                    if(scrollPercent>page_value) {
-                        checkAddToCartexitPopup(addToCartexitPopUpData[ipc],4);
+                    if (scrollPercent > page_value) {
+                        checkAddToCartexitPopup(addToCartexitPopUpData[ipc], 4);
                     }
                 }
             }
         }
     }
+
     var cartdata;
-    this.process = function (isCapturedByPopup, callBack, isCapturedByMagnet, impressionBy='') {
+    this.process = function (isCapturedByPopup, callBack, isCapturedByMagnet, impressionBy = '') {
 
         getCart(function (cart) {
 
-            window.postMessage("salesparkcartcreated","https://"+window.location.hostname);
+            window.postMessage("salesparkcartcreated", "https://" + window.location.hostname);
             if (isCapturedByPopup == 1) {
                 cart.is_email_captured_by_popup = 1;
                 impressionBy = 'EMAILCOLLECTOR';
@@ -273,7 +277,7 @@ function saleSparkCartTrigger() {
                 currentPageUrlWithoutQueryParameters: getCurrentPageUrlWithoutQueryParameters(),
                 impressionBy: impressionBy
             };
-            cartdata=cart;
+            cartdata = cart;
 
 
             if (isOnlyRecoverCart(cart)) {
@@ -283,11 +287,11 @@ function saleSparkCartTrigger() {
                 try {
                     cartHash_cached = String(window.localStorage.getItem('cartHash_cached'));
                     cartHash_live = CryptoJS.MD5(JSON.stringify(cart)).toString();
-                    console.log(cartHash_cached+" ---- "+cartHash_live);
+                    console.log(cartHash_cached + " ---- " + cartHash_live);
                 } catch (e) {
                 }
 
-                jQuery(document).on('mouseleave',function(e){
+                jQuery(document).on('mouseleave', function (e) {
                     if (typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined') {
                         if (e.clientY < 0) { // less than 60px is close enough to the top
                             var addToCartexitPopUpData = globalJavascript.globalSettingsAndData.exitpopup;
@@ -311,55 +315,59 @@ function saleSparkCartTrigger() {
 
                 var addToCartexitPopUpData = typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined' ? globalJavascript.globalSettingsAndData.exitpopup : [];
 
-                if(addToCartexitPopUpData.length>0){
-                    for (var ipc=0;ipc<addToCartexitPopUpData.length;ipc++){
-                        if(addToCartexitPopUpData[ipc].triggerjson.timer_trigger=="on"){
-                            if(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_value!=null){
-                                var time_value=parseInt(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_value)*1000;
-                            }else{var time_value=0;}
-                            time_value=parseInt(addToCartexitPopUpData[ipc].triggerjson.time_trigger_value)*1000;
-                            (function(ipc,addToCartexitPopUpData){
-                                setTimeout(function(){  checkAddToCartexitPopup(addToCartexitPopUpData[ipc],2); }, time_value);
-                            }(ipc,addToCartexitPopUpData));
+                if (addToCartexitPopUpData.length > 0) {
+                    for (var ipc = 0; ipc < addToCartexitPopUpData.length; ipc++) {
+                        if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger == "on") {
+                            if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger_value != null) {
+                                var time_value = parseInt(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_value) * 1000;
+                            } else {
+                                var time_value = 0;
+                            }
+                            time_value = parseInt(addToCartexitPopUpData[ipc].triggerjson.time_trigger_value) * 1000;
+                            (function (ipc, addToCartexitPopUpData) {
+                                setTimeout(function () {
+                                    checkAddToCartexitPopup(addToCartexitPopUpData[ipc], 2);
+                                }, time_value);
+                            }(ipc, addToCartexitPopUpData));
                         }
                     }
                 }
 
-               if ((cartHash_cached != cartHash_live || impressionBy != '') && data.cart.item_count > 0) {
+                if ((cartHash_cached != cartHash_live || impressionBy != '') && data.cart.item_count > 0) {
                     salesparkJquery.ajax({
-                            url: webApi+"cart/create",
-                            dataType: 'json',
-                            type: 'POST',
-                            data: data,
-                            crossDomain: true,
-                            withCredentials: false,
-                            async: false,
-                            success: function (response) {
-                                console.log(response._metadata.message);
-                                if (response._metadata.message == 'success') {
-                                    window.localStorage.setItem('cartHash_cached', cartHash_live);
-                                    var cartData = data.cart;
-                                    saleSparkCartTrigger.CartItemData = cartData;
-                                    var addToCartPopUpData = globalJavascript.globalSettingsAndData.emailCollector;
-                                    if(addToCartPopUpData.template.length>0){
-                                        checkAddToCartPopup(cartData, addToCartPopUpData.template, callBack, '');
-                                    }
-                                    enableEmailMagnet(cartData);
-                                    var addToCartexitPopUpData = typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined' ? globalJavascript.globalSettingsAndData.exitpopup : [];
-                                    /* trigger check */
-                                    if(addToCartexitPopUpData.length>0){
-                                        for (var ipc=0;ipc<addToCartexitPopUpData.length;ipc++){
-                                            if(addToCartexitPopUpData[ipc].triggerjson.timer_trigger_cart=="on"){
-                                                checkAddToCartexitPopup(addToCartexitPopUpData[ipc],1);
-                                            }
+                        url: webApi + "cart/create",
+                        dataType: 'json',
+                        type: 'POST',
+                        data: data,
+                        crossDomain: true,
+                        withCredentials: false,
+                        async: false,
+                        success: function (response) {
+                            console.log(response._metadata.message);
+                            if (response._metadata.message == 'success') {
+                                window.localStorage.setItem('cartHash_cached', cartHash_live);
+                                var cartData = data.cart;
+                                saleSparkCartTrigger.CartItemData = cartData;
+                                var addToCartPopUpData = globalJavascript.globalSettingsAndData.emailCollector;
+                                if (addToCartPopUpData.template.length > 0) {
+                                    checkAddToCartPopup(cartData, addToCartPopUpData.template, callBack, '');
+                                }
+                                enableEmailMagnet(cartData);
+                                var addToCartexitPopUpData = typeof globalJavascript.globalSettingsAndData.exitpopup != 'undefined' ? globalJavascript.globalSettingsAndData.exitpopup : [];
+                                /* trigger check */
+                                if (addToCartexitPopUpData.length > 0) {
+                                    for (var ipc = 0; ipc < addToCartexitPopUpData.length; ipc++) {
+                                        if (addToCartexitPopUpData[ipc].triggerjson.timer_trigger_cart == "on") {
+                                            checkAddToCartexitPopup(addToCartexitPopUpData[ipc], 1);
                                         }
                                     }
-                                    /*trigger check */
-                                    if(typeof callBack == 'function') {
-                                        callBack();
-                                    }
+                                }
+                                /*trigger check */
+                                if (typeof callBack == 'function') {
+                                    callBack();
                                 }
                             }
+                        }
                     });
                 }
             }
@@ -370,10 +378,10 @@ function saleSparkCartTrigger() {
     function enableEmailMagnet(cartData) {
         if (cartData && !cartData.email && globalJavascript.globalSettingsAndData.emailCollector.is_email_magnet_enable == '1') {
             salesparkJquery(document).on('blur', 'input', function (e) {
-                if(!e.originalEvent.isTrusted){
+                if (!e.originalEvent.isTrusted) {
                     return false;
                 }
-                if ($(this).attr('id') == 'sp-email-address' &&  $(this).attr('type') == 'email') {
+                if ($(this).attr('id') == 'sp-email-address' && $(this).attr('type') == 'email') {
                     return false;
                 }
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -405,8 +413,8 @@ function saleSparkCartTrigger() {
     }
 
     function showNotification() {
-        if(globalJavascript.globalSettingsAndData.emailCollector.push_options != null) {
-            if(globalJavascript.globalSettingsAndData.emailCollector.push_options.reminder_time) {
+        if (globalJavascript.globalSettingsAndData.emailCollector.push_options != null) {
+            if (globalJavascript.globalSettingsAndData.emailCollector.push_options.reminder_time) {
                 var notifTimer = null;
                 var setting = globalJavascript.globalSettingsAndData.emailCollector.push_options;
                 notifTimer = setInterval(function () {
@@ -434,9 +442,8 @@ function saleSparkCartTrigger() {
                     }
                     Push.create(setting.title, pushOptions);
                     clearInterval(notifTimer);
-                },globalJavascript.globalSettingsAndData.emailCollector.push_options.reminder_time);
-            }
-            else {
+                }, globalJavascript.globalSettingsAndData.emailCollector.push_options.reminder_time);
+            } else {
 
             }
         }
@@ -447,18 +454,18 @@ function saleSparkCartTrigger() {
         //salesparkJquery('#CartDrawer').removeAttr('tabindex');
 
         var previousCachedTime = window.localStorage.getItem('timeData');
-        if(previousCachedTime!==undefined){
+        if (previousCachedTime !== undefined) {
             var currentTime = new Date();
             var previousTime = new Date(previousCachedTime);
             var msec = parseInt(currentTime - previousTime);
             var mins = parseInt(Math.floor(msec / 60000));
-            if(mins<=5){
-                console.log('Time remaining : '+ mins);
+            if (mins <= 5) {
+                console.log('Time remaining : ' + mins);
                 return;
             }
         }
 
-        if(localStorage.getItem('localNotifPermission') !== null) {
+        if (localStorage.getItem('localNotifPermission') !== null) {
             if (localStorage.getItem('localNotifPermission') == 'yes') {
                 showNotification();
             }
@@ -502,12 +509,12 @@ function saleSparkCartTrigger() {
                 console.log('From email collector popup');
                 saleSparkCartTrigger.process(1, function () {
                     salesparkJquery('form[action="/cart/add"]').submit();
-                },'', 'EMAILCOLLECTOR');
-            }else if(result.dismiss){
+                }, '', 'EMAILCOLLECTOR');
+            } else if (result.dismiss) {
                 var timeNow = new Date();
                 window.localStorage.setItem('timeData', timeNow);
                 console.log('From email collector popup 1');
-                saleSparkCartTrigger.process(0,'','','EMAILCOLLECTOR');
+                saleSparkCartTrigger.process(0, '', '', 'EMAILCOLLECTOR');
             }
         });
         if (typeof callBack == 'function') {
@@ -516,155 +523,156 @@ function saleSparkCartTrigger() {
     }
 
 
-    function checkAddToCartexitPopup(addToCartexitPopUpData,statuscheck) {
+    function checkAddToCartexitPopup(addToCartexitPopUpData, statuscheck) {
 
-        if(addToCartexitPopUpData.collectioninfo!=""){
-            if(ShopifyAnalytics.meta.page.pageType == 'product') {
-                if(jQuery.inArray(ShopifyAnalytics.meta.product.id, addToCartexitPopUpData.collectioninfo) == -1){
+        if (addToCartexitPopUpData.collectioninfo != "") {
+            if (ShopifyAnalytics.meta.page.pageType == 'product') {
+                if (jQuery.inArray(ShopifyAnalytics.meta.product.id, addToCartexitPopUpData.collectioninfo) == -1) {
                     return;
                 }
             }
         }
 
-        var addToCartexitPopUpData_id=addToCartexitPopUpData.id;
-        var localNotifpopupids_array=[];
-        var carget=0;
-        if(addToCartexitPopUpData.usecode==2){
-            if(cartdata) {
+        var addToCartexitPopUpData_id = addToCartexitPopUpData.id;
+        var localNotifpopupids_array = [];
+        var carget = 0;
+        if (addToCartexitPopUpData.usecode == 2) {
+            if (cartdata) {
                 if (cartdata.item_count == 0) {
                     return;
-                }else{
-                    carget=1;
+                } else {
+                    carget = 1;
                 }
-            }else{
+            } else {
                 return;
             }
         }
-        if(statuscheck==1){
-            if(localStorage.getItem('localNotifpopupids1')!=''&&localStorage.getItem('localNotifpopupids1')!=null) {
-                var localNotifpopupids=localStorage.getItem('localNotifpopupids1');
+        if (statuscheck == 1) {
+            if (localStorage.getItem('localNotifpopupids1') != '' && localStorage.getItem('localNotifpopupids1') != null) {
+                var localNotifpopupids = localStorage.getItem('localNotifpopupids1');
                 var str_id = localNotifpopupids.indexOf(",");
-                localNotifpopupids_array=localNotifpopupids.split(',');
-                var countnotifids_leg=localNotifpopupids_array.length;
-                ckflag=0;
+                localNotifpopupids_array = localNotifpopupids.split(',');
+                var countnotifids_leg = localNotifpopupids_array.length;
+                ckflag = 0;
                 for (var ick = 0; ick < countnotifids_leg; ick++) {
-                    if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                        ckflag=1;
+                    if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                        ckflag = 1;
                         return;
                     }
                 }
-                if(ckflag!=1){
-                    localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                    localNotifpopupids=localNotifpopupids_array.join(',');
-                    localStorage.setItem('localNotifpopupids1',localNotifpopupids);
+                if (ckflag != 1) {
+                    localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                    localNotifpopupids = localNotifpopupids_array.join(',');
+                    localStorage.setItem('localNotifpopupids1', localNotifpopupids);
                 }
-            }else{
-                localStorage.setItem('localNotifpopupids1',addToCartexitPopUpData_id);
+            } else {
+                localStorage.setItem('localNotifpopupids1', addToCartexitPopUpData_id);
             }
         }
-        if(statuscheck==2){
-            if(localStorage.getItem('localNotifpopupids2')!=''&&localStorage.getItem('localNotifpopupids2')!=null) {
-                var localNotifpopupids=localStorage.getItem('localNotifpopupids2');
+        if (statuscheck == 2) {
+            if (localStorage.getItem('localNotifpopupids2') != '' && localStorage.getItem('localNotifpopupids2') != null) {
+                var localNotifpopupids = localStorage.getItem('localNotifpopupids2');
                 var str_id = localNotifpopupids.indexOf(",");
-                localNotifpopupids_array=localNotifpopupids.split(',');
-                var countnotifids_leg=localNotifpopupids_array.length;
-                ckflag=0;
+                localNotifpopupids_array = localNotifpopupids.split(',');
+                var countnotifids_leg = localNotifpopupids_array.length;
+                ckflag = 0;
                 for (var ick = 0; ick < countnotifids_leg; ick++) {
-                    if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                        ckflag=1;
+                    if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                        ckflag = 1;
                         return;
                     }
                 }
-                if(ckflag!=1){
-                    localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                    localNotifpopupids=localNotifpopupids_array.join(',');
-                    localStorage.setItem('localNotifpopupids2',localNotifpopupids);
+                if (ckflag != 1) {
+                    localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                    localNotifpopupids = localNotifpopupids_array.join(',');
+                    localStorage.setItem('localNotifpopupids2', localNotifpopupids);
                 }
-            }else{
-                localStorage.setItem('localNotifpopupids2',addToCartexitPopUpData_id);
+            } else {
+                localStorage.setItem('localNotifpopupids2', addToCartexitPopUpData_id);
             }
         }
-        if(statuscheck==3){
-            if(localStorage.getItem('localNotifpopupids3')!=''&&localStorage.getItem('localNotifpopupids3')!=null) {
-                var localNotifpopupids=localStorage.getItem('localNotifpopupids3');
+        if (statuscheck == 3) {
+            if (localStorage.getItem('localNotifpopupids3') != '' && localStorage.getItem('localNotifpopupids3') != null) {
+                var localNotifpopupids = localStorage.getItem('localNotifpopupids3');
                 var str_id = localNotifpopupids.indexOf(",");
-                localNotifpopupids_array=localNotifpopupids.split(',');
-                var countnotifids_leg=localNotifpopupids_array.length;
-                ckflag=0;
+                localNotifpopupids_array = localNotifpopupids.split(',');
+                var countnotifids_leg = localNotifpopupids_array.length;
+                ckflag = 0;
                 for (var ick = 0; ick < countnotifids_leg; ick++) {
-                    if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                        ckflag=1;
+                    if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                        ckflag = 1;
                         return;
                     }
                 }
-                if(ckflag!=1){
-                    localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                    localNotifpopupids=localNotifpopupids_array.join(',');
-                    localStorage.setItem('localNotifpopupids3',localNotifpopupids);
+                if (ckflag != 1) {
+                    localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                    localNotifpopupids = localNotifpopupids_array.join(',');
+                    localStorage.setItem('localNotifpopupids3', localNotifpopupids);
                 }
-            }else{
-                localStorage.setItem('localNotifpopupids3',addToCartexitPopUpData_id);
+            } else {
+                localStorage.setItem('localNotifpopupids3', addToCartexitPopUpData_id);
             }
         }
-        if(statuscheck==4){
-            if(localStorage.getItem('localNotifpopupids4')!=''&&localStorage.getItem('localNotifpopupids4')!=null) {
-                var localNotifpopupids=localStorage.getItem('localNotifpopupids4');
+        if (statuscheck == 4) {
+            if (localStorage.getItem('localNotifpopupids4') != '' && localStorage.getItem('localNotifpopupids4') != null) {
+                var localNotifpopupids = localStorage.getItem('localNotifpopupids4');
                 var str_id = localNotifpopupids.indexOf(",");
-                localNotifpopupids_array=localNotifpopupids.split(',');
-                var countnotifids_leg=localNotifpopupids_array.length;
-                ckflag=0;
+                localNotifpopupids_array = localNotifpopupids.split(',');
+                var countnotifids_leg = localNotifpopupids_array.length;
+                ckflag = 0;
                 for (var ick = 0; ick < countnotifids_leg; ick++) {
-                    if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                        ckflag=1;
+                    if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                        ckflag = 1;
                         return;
                     }
                 }
-                if(ckflag!=1){
-                    localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                    localNotifpopupids=localNotifpopupids_array.join(',');
-                    localStorage.setItem('localNotifpopupids4',localNotifpopupids);
+                if (ckflag != 1) {
+                    localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                    localNotifpopupids = localNotifpopupids_array.join(',');
+                    localStorage.setItem('localNotifpopupids4', localNotifpopupids);
                 }
-            }else{
-                localStorage.setItem('localNotifpopupids4',addToCartexitPopUpData_id);
+            } else {
+                localStorage.setItem('localNotifpopupids4', addToCartexitPopUpData_id);
             }
         }
 
-        if(addToCartexitPopUpData.displaydevices=='mobile'){
-            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-            }else{return;}
+        if (addToCartexitPopUpData.displaydevices == 'mobile') {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            } else {
+                return;
+            }
         }
 
-        if(carget==1){
-            addToCartexitPopUpData.design[0]=get_cart_coupon(cartdata,localNotifpopupids,addToCartexitPopUpData);
-        }else{
-            show_popup_sweetalert( addToCartexitPopUpData.design[0]);
+        if (carget == 1) {
+            addToCartexitPopUpData.design[0] = get_cart_coupon(cartdata, localNotifpopupids, addToCartexitPopUpData);
+        } else {
+            show_popup_sweetalert(addToCartexitPopUpData.design[0]);
         }
 
 
-
-       jQuery( document).on('submit',".popup-backform" ,function(e) {
-           add_to_local_poup_id(jQuery(this).attr('popup-id'));
-           salesparkJquery.ajax({
-               url: webApi+"popup/customer",
-               dataType: 'json',
-               type: 'POST',
-               data: jQuery(this).serialize(),
-               crossDomain: true,
-               withCredentials: false,
-               async: false,
-               success: function (response) {
-                  // console.log(response._metadata.message);
-                   if (response._metadata.message == 'success') {
-                       salesparkswal.close();
-                   }
-               }
-           });
+        jQuery(document).on('submit', ".popup-backform", function (e) {
+            add_to_local_poup_id(jQuery(this).attr('popup-id'));
+            salesparkJquery.ajax({
+                url: webApi + "popup/customer",
+                dataType: 'json',
+                type: 'POST',
+                data: jQuery(this).serialize(),
+                crossDomain: true,
+                withCredentials: false,
+                async: false,
+                success: function (response) {
+                    // console.log(response._metadata.message);
+                    if (response._metadata.message == 'success') {
+                        salesparkswal.close();
+                    }
+                }
+            });
         });
 
     }
 
 
-    function show_popup_sweetalert(addToCartexitdesign){
+    function show_popup_sweetalert(addToCartexitdesign) {
         if (salesparkswal.isVisible()) {
             return;
         }
@@ -709,13 +717,13 @@ function saleSparkCartTrigger() {
         }
     }
 
-    function get_cart_coupon(cart_data,localNotifpopupids,addToCartexitPopUpData){
-        var customerid= ShopifyAnalytics.meta.page.customerId;
-        if(customerid==null) {
-            customerid=0;
+    function get_cart_coupon(cart_data, localNotifpopupids, addToCartexitPopUpData) {
+        var customerid = ShopifyAnalytics.meta.page.customerId;
+        if (customerid == null) {
+            customerid = 0;
         }
         salesparkJquery.ajax({
-            url: webApi+"popup/dynamic-coupon?shop="+Shopify.shop+"&customer_id="+customerid,
+            url: webApi + "popup/dynamic-coupon?shop=" + Shopify.shop + "&customer_id=" + customerid,
             dataType: 'json',
             type: 'POST',
             data: cart_data,
@@ -724,100 +732,101 @@ function saleSparkCartTrigger() {
             async: false,
             success: function (response) {
                 if (response._metadata.message == 'success') {
-                    var html=addToCartexitPopUpData.design[0];
-                    var records_coupon=response.records;
-                    var amount_coupon= records_coupon.value;
-                    amount_coupon=amount_coupon.toString();
-                    amount_coupon=amount_coupon.replace("-", "");
-                    if(records_coupon.value_type=='percentage'){
-                        amount_coupon=amount_coupon+'%';
-                    }else{
-                        amount_coupon=amount_coupon+Shopify.currency.active;
+                    var html = addToCartexitPopUpData.design[0];
+                    var records_coupon = response.records;
+                    var amount_coupon = records_coupon.value;
+                    amount_coupon = amount_coupon.toString();
+                    amount_coupon = amount_coupon.replace("-", "");
+                    if (records_coupon.value_type == 'percentage') {
+                        amount_coupon = amount_coupon + '%';
+                    } else {
+                        amount_coupon = amount_coupon + Shopify.currency.active;
                     }
-                    html=html.replace("%discount%", amount_coupon);
-                    html=html.replace("%hidden_copon%", '<input type="hidden" name="couponcode" class="coupon_' + addToCartexitPopUpData.id + '" value="' + records_coupon.code +'">');
+                    html = html.replace("%discount%", amount_coupon);
+                    html = html.replace("%hidden_copon%", '<input type="hidden" name="couponcode" class="coupon_' + addToCartexitPopUpData.id + '" value="' + records_coupon.code + '">');
                     show_popup_sweetalert(html);
                 }
             }
         });
     }
-    function add_to_local_poup_id(addToCartexitPopUpData_id){
-        var localNotifpopupids_array=[];
-        if(localStorage.getItem('localNotifpopupids1')!=''&&localStorage.getItem('localNotifpopupids1')!=null) {
-            var localNotifpopupids=localStorage.getItem('localNotifpopupids1');
+
+    function add_to_local_poup_id(addToCartexitPopUpData_id) {
+        var localNotifpopupids_array = [];
+        if (localStorage.getItem('localNotifpopupids1') != '' && localStorage.getItem('localNotifpopupids1') != null) {
+            var localNotifpopupids = localStorage.getItem('localNotifpopupids1');
             var str_id = localNotifpopupids.indexOf(",");
-            localNotifpopupids_array=localNotifpopupids.split(',');
-            var countnotifids_leg=localNotifpopupids_array.length;
-            ckflag=0;
+            localNotifpopupids_array = localNotifpopupids.split(',');
+            var countnotifids_leg = localNotifpopupids_array.length;
+            ckflag = 0;
             for (var ick = 0; ick < countnotifids_leg; ick++) {
-                if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                    ckflag=1;
+                if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                    ckflag = 1;
                 }
             }
-            if(ckflag!=1){
-                localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                localNotifpopupids=localNotifpopupids_array.join(',');
-                localStorage.setItem('localNotifpopupids1',localNotifpopupids);
+            if (ckflag != 1) {
+                localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                localNotifpopupids = localNotifpopupids_array.join(',');
+                localStorage.setItem('localNotifpopupids1', localNotifpopupids);
             }
-        }else{
-            localStorage.setItem('localNotifpopupids1',addToCartexitPopUpData_id);
+        } else {
+            localStorage.setItem('localNotifpopupids1', addToCartexitPopUpData_id);
         }
-        if(localStorage.getItem('localNotifpopupids2')!=''&&localStorage.getItem('localNotifpopupids2')!=null) {
-            var localNotifpopupids=localStorage.getItem('localNotifpopupids2');
+        if (localStorage.getItem('localNotifpopupids2') != '' && localStorage.getItem('localNotifpopupids2') != null) {
+            var localNotifpopupids = localStorage.getItem('localNotifpopupids2');
             var str_id = localNotifpopupids.indexOf(",");
-            localNotifpopupids_array=localNotifpopupids.split(',');
-            var countnotifids_leg=localNotifpopupids_array.length;
-            ckflag=0;
+            localNotifpopupids_array = localNotifpopupids.split(',');
+            var countnotifids_leg = localNotifpopupids_array.length;
+            ckflag = 0;
             for (var ick = 0; ick < countnotifids_leg; ick++) {
-                if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                    ckflag=1;
+                if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                    ckflag = 1;
                 }
             }
-            if(ckflag!=1){
-                localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                localNotifpopupids=localNotifpopupids_array.join(',');
-                localStorage.setItem('localNotifpopupids2',localNotifpopupids);
+            if (ckflag != 1) {
+                localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                localNotifpopupids = localNotifpopupids_array.join(',');
+                localStorage.setItem('localNotifpopupids2', localNotifpopupids);
             }
-        }else{
-            localStorage.setItem('localNotifpopupids2',addToCartexitPopUpData_id);
+        } else {
+            localStorage.setItem('localNotifpopupids2', addToCartexitPopUpData_id);
         }
-        if(localStorage.getItem('localNotifpopupids3')!=''&&localStorage.getItem('localNotifpopupids3')!=null) {
-            var localNotifpopupids=localStorage.getItem('localNotifpopupids3');
+        if (localStorage.getItem('localNotifpopupids3') != '' && localStorage.getItem('localNotifpopupids3') != null) {
+            var localNotifpopupids = localStorage.getItem('localNotifpopupids3');
             var str_id = localNotifpopupids.indexOf(",");
-            localNotifpopupids_array=localNotifpopupids.split(',');
-            var countnotifids_leg=localNotifpopupids_array.length;
-            ckflag=0;
+            localNotifpopupids_array = localNotifpopupids.split(',');
+            var countnotifids_leg = localNotifpopupids_array.length;
+            ckflag = 0;
             for (var ick = 0; ick < countnotifids_leg; ick++) {
-                if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                    ckflag=1;
+                if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                    ckflag = 1;
                 }
             }
-            if(ckflag!=1){
-                localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                localNotifpopupids=localNotifpopupids_array.join(',');
-                localStorage.setItem('localNotifpopupids3',localNotifpopupids);
+            if (ckflag != 1) {
+                localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                localNotifpopupids = localNotifpopupids_array.join(',');
+                localStorage.setItem('localNotifpopupids3', localNotifpopupids);
             }
-        }else{
-            localStorage.setItem('localNotifpopupids3',addToCartexitPopUpData_id);
+        } else {
+            localStorage.setItem('localNotifpopupids3', addToCartexitPopUpData_id);
         }
-        if(localStorage.getItem('localNotifpopupids4')!=''&&localStorage.getItem('localNotifpopupids4')!=null) {
-            var localNotifpopupids=localStorage.getItem('localNotifpopupids4');
+        if (localStorage.getItem('localNotifpopupids4') != '' && localStorage.getItem('localNotifpopupids4') != null) {
+            var localNotifpopupids = localStorage.getItem('localNotifpopupids4');
             var str_id = localNotifpopupids.indexOf(",");
-            localNotifpopupids_array=localNotifpopupids.split(',');
-            var countnotifids_leg=localNotifpopupids_array.length;
-            ckflag=0;
+            localNotifpopupids_array = localNotifpopupids.split(',');
+            var countnotifids_leg = localNotifpopupids_array.length;
+            ckflag = 0;
             for (var ick = 0; ick < countnotifids_leg; ick++) {
-                if(localNotifpopupids_array[ick]==addToCartexitPopUpData_id){
-                    ckflag=1;
+                if (localNotifpopupids_array[ick] == addToCartexitPopUpData_id) {
+                    ckflag = 1;
                 }
             }
-            if(ckflag!=1){
-                localNotifpopupids_array[countnotifids_leg]=addToCartexitPopUpData_id;
-                localNotifpopupids=localNotifpopupids_array.join(',');
-                localStorage.setItem('localNotifpopupids4',localNotifpopupids);
+            if (ckflag != 1) {
+                localNotifpopupids_array[countnotifids_leg] = addToCartexitPopUpData_id;
+                localNotifpopupids = localNotifpopupids_array.join(',');
+                localStorage.setItem('localNotifpopupids4', localNotifpopupids);
             }
-        }else{
-            localStorage.setItem('localNotifpopupids4',addToCartexitPopUpData_id);
+        } else {
+            localStorage.setItem('localNotifpopupids4', addToCartexitPopUpData_id);
         }
     }
 
@@ -833,11 +842,11 @@ function saleSparkCartTrigger() {
 
         if (getParameterByName('cc-preview-email-collector')) {
 
-            if(saleSparkCartTrigger.globalSettingsAndData.addToCartPopUp!=undefined && saleSparkCartTrigger.globalSettingsAndData.addToCartPopUp.length>0){
+            if (saleSparkCartTrigger.globalSettingsAndData.addToCartPopUp != undefined && saleSparkCartTrigger.globalSettingsAndData.addToCartPopUp.length > 0) {
                 addToCartPopUpData = saleSparkCartTrigger.globalSettingsAndData.addToCartPopUp[0]
-                if(addToCartPopUpData.banner_image!=''){
+                if (addToCartPopUpData.banner_image != '') {
                     bannerImage = addToCartPopUpData.banner_image
-                }else{
+                } else {
                     bannerImage = 'img/cart-popup.png';
                 }
                 if (salesparkswal.isVisible()) {
@@ -867,8 +876,8 @@ function saleSparkCartTrigger() {
                 var buttonText = addToCartPopUpData.button_text;
                 var buttonBackgroundColor = addToCartPopUpData.button_background_color;
 
-                var titlehtml = "<h2 style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + headingFontSize +";color:"+ headingColor +" ;text-align:" + headingTextAlignment + ";font-weight:" + headingFontWeight +";font-style: " + headingFontStyle +"'>"+ headingText +"</h2>"; //addToCartPopUpData.heading_text,
-                var descripionText = "<p style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + descriptionFontSize +";color:"+ descriptionColor +";text-align:" + descriptionTextAlignment +";font-weight: " + descriptionFontWeight +";font-style:" + descriptionFontStyle +";'>" + descriptionText + "</p>";
+                var titlehtml = "<h2 style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + headingFontSize + ";color:" + headingColor + " ;text-align:" + headingTextAlignment + ";font-weight:" + headingFontWeight + ";font-style: " + headingFontStyle + "'>" + headingText + "</h2>"; //addToCartPopUpData.heading_text,
+                var descripionText = "<p style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + descriptionFontSize + ";color:" + descriptionColor + ";text-align:" + descriptionTextAlignment + ";font-weight: " + descriptionFontWeight + ";font-style:" + descriptionFontStyle + ";'>" + descriptionText + "</p>";
 
                 salesparkswal.fire({
                     title: titlehtml,
@@ -876,12 +885,12 @@ function saleSparkCartTrigger() {
                     input: 'email',
                     inputPlaceholder: addToCartPopUpData.email_placeholder,
                     inputAutoTrim: true,
-                    confirmButtonText:  "<span style='font-size:" + buttonFontSize +";color:"+ buttonColor +";font-style:"+ buttonFontStyle +";font-weight:" + buttonFontWeight +"'>"+addToCartPopUpData.button_text+"</span>",
+                    confirmButtonText: "<span style='font-size:" + buttonFontSize + ";color:" + buttonColor + ";font-style:" + buttonFontStyle + ";font-weight:" + buttonFontWeight + "'>" + addToCartPopUpData.button_text + "</span>",
                     confirmButtonColor: addToCartPopUpData.button_background_color,
                     showCancelButton: false,
                     cancelButtonText: 'No, cancel!',
-                    showCloseButton: (addToCartPopUpData.is_active_close_button==1?true:false),
-                    imageUrl: webApi+'/'+bannerImage,
+                    showCloseButton: (addToCartPopUpData.is_active_close_button == 1 ? true : false),
+                    imageUrl: webApi + '/' + bannerImage,
                     imageWidth: 100,
                     allowOutsideClick: false,
                     //footer: 'Footer text',
@@ -891,16 +900,16 @@ function saleSparkCartTrigger() {
                 }).then(function (result) {
 
                 });
-            }else{
+            } else {
                 salesparkJquery.ajax({
-                    url: webApi + "/api/cart/popupSettings?shop="+store.domain,
+                    url: webApi + "/api/cart/popupSettings?shop=" + store.domain,
                     dataType: 'json',
                     type: 'GET',
                     success: function (response) {
                         var addToCartPopUpData = response.records.addToCartPopUp;
-                        if(addToCartPopUpData.banner_image!=''){
+                        if (addToCartPopUpData.banner_image != '') {
                             bannerImage = addToCartPopUpData.banner_image
-                        }else{
+                        } else {
                             bannerImage = 'img/cart-popup.png';
                         }
                         if (salesparkswal.isVisible()) {
@@ -930,20 +939,20 @@ function saleSparkCartTrigger() {
                         var buttonText = addToCartPopUpData.button_text;
                         var buttonBackgroundColor = addToCartPopUpData.button_background_color;
 
-                        var titlehtml = "<h2 style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + headingFontSize +";color:"+ headingColor +" ;text-align:" + headingTextAlignment + ";font-weight:" + headingFontWeight +";font-style: " + headingFontStyle +"'>"+ headingText +"</h2>"; //addToCartPopUpData.heading_text,
-                        var descripionText = "<p style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + descriptionFontSize +";color:"+ descriptionColor +";text-align:" + descriptionTextAlignment +";font-weight: " + descriptionFontWeight +";font-style:" + descriptionFontStyle +";'>" + descriptionText + "</p>";
+                        var titlehtml = "<h2 style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + headingFontSize + ";color:" + headingColor + " ;text-align:" + headingTextAlignment + ";font-weight:" + headingFontWeight + ";font-style: " + headingFontStyle + "'>" + headingText + "</h2>"; //addToCartPopUpData.heading_text,
+                        var descripionText = "<p style='text-transform: unset;font-family: Open Sans, sans-serif;font-size:" + descriptionFontSize + ";color:" + descriptionColor + ";text-align:" + descriptionTextAlignment + ";font-weight: " + descriptionFontWeight + ";font-style:" + descriptionFontStyle + ";'>" + descriptionText + "</p>";
                         salesparkswal.fire({
                             title: titlehtml,
                             html: descripionText,
                             input: 'email',
                             inputPlaceholder: addToCartPopUpData.email_placeholder,
                             inputAutoTrim: true,
-                            confirmButtonText:  "<span style='font-size:" + buttonFontSize +";color:"+ buttonColor +";font-style:"+ buttonFontStyle +";font-weight:" + buttonFontWeight +"'>"+addToCartPopUpData.button_text+"</span>",
+                            confirmButtonText: "<span style='font-size:" + buttonFontSize + ";color:" + buttonColor + ";font-style:" + buttonFontStyle + ";font-weight:" + buttonFontWeight + "'>" + addToCartPopUpData.button_text + "</span>",
                             confirmButtonColor: addToCartPopUpData.button_background_color,
                             showCancelButton: false,
                             cancelButtonText: 'No, cancel!',
-                            showCloseButton: (addToCartPopUpData.is_active_close_button==1?true:false),
-                            imageUrl: webApi+'/'+bannerImage,
+                            showCloseButton: (addToCartPopUpData.is_active_close_button == 1 ? true : false),
+                            imageUrl: webApi + '/' + bannerImage,
                             imageWidth: 100,
                             allowOutsideClick: false,
                             //footer: 'Footer text',
@@ -965,8 +974,7 @@ function saleSparkCartTrigger() {
         salesparkJquery('body').on('click', '#cc_f-p-preview-email-btn', function () {
             if (getParameterByName('cc-preview-email-collector')) {
                 salesparkJquery('#cc-atcp-table', 'body').hide();
-            }
-            else {
+            } else {
                 salesparkJquery('#cc_f-p-preview-email-placeholder-error', 'body').hide();
                 var email = salesparkJquery('#cc_f-p-preview-email-placeholder', 'body').val();
                 if (!validateEmail(email)) {
@@ -1052,7 +1060,7 @@ function saleSparkCartTrigger() {
                     //Show email collector
                     isAjax = 1;
                     console.log('show collector in ajax call from ajax');
-                    if(!Push.Permission.has()) {
+                    if (!Push.Permission.has()) {
                         requestPermission();
                     }
                     saleSparkCartTrigger.process(0);
@@ -1071,7 +1079,7 @@ function saleSparkCartTrigger() {
 
         salesparkJquery('body').on('submit', 'form[action="/cart/add"]', function (e) {
             console.log(Push.Permission.has());
-            if(!Push.Permission.has()) {
+            if (!Push.Permission.has()) {
                 requestPermission();
             }
             //console.clear();
