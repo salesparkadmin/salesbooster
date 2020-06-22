@@ -4,7 +4,7 @@ let sound = null;
 var setting = null;
 var reminderTimer = null;
 var pushReminderTimer = null;
-const apiRoot = "https://"+Shopify.shop+"/apps/storefront/";
+const apiRoot = "https://"+Shopify.domain+"/apps/storefront/";
 function transformToAssocArray(prmstr) {
     var params = {};
     var prmarr = prmstr.split("&");
